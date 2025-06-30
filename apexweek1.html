@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My First Web Page</title>
+
+  <!-- -------------  CSS ------------- -->
+  <style>
+    :root {
+      --primary: #006c6d;   /* teal */
+      --accent:  #ffb703;   /* amber */
+      --bg:      #f5fefe;   /* very light teal */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 2.5rem 1rem;
+      text-align: center;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    img.hero {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+      margin-bottom: 1.5rem;
+    }
+
+    a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: .75rem 1.4rem;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .2s ease;
+    }
+    .btn:hover { transform: scale(1.05); }
+
+    footer {
+      margin-top: 2.5rem;
+      background: #eee;
+      text-align: center;
+      padding: 1rem;
+      font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- -------------  HTML ------------- -->
+  <header>
+    <h1>Welcome to My First Website</h1>
+    <p>Learning the basics of HTML, CSS &amp; JavaScript 🎉</p>
+  </header>
+
+  <main>
+    <img
+      src="https://source.unsplash.com/featured/900x300?code"
+      alt="A laptop with code on screen"
+      class="hero" />
+
+    <section>
+      <h2>About this page</h2>
+      <p>
+        This simple webpage is part of <strong>Task&nbsp;1 – Basics of Web Development</strong>.
+        It shows how to:
+      </p>
+      <ul>
+        <li>Structure content with semantic HTML elements.</li>
+        <li>Apply custom styles using CSS.</li>
+        <li>Add interactivity through JavaScript.</li>
+      </ul>
+
+      <p>
+        New to the web? Check out the
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">
+          MDN HTML guide
+        </a>.
+      </p>
+
+      <button class="btn" id="alertBtn">Click me!</button>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> | Built with ❤ by You
+  </footer>
+
+  <!-- -------------  JavaScript ------------- -->
+  <script>
+    // Update footer year automatically
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Show a friendly alert when the button is clicked
+    document.getElementById('alertBtn').addEventListener('click', () => {
+      alert('Hello there! You just triggered your first JavaScript interaction 🚀');
+    });
+  </script>
+</body>
+</html>
+
