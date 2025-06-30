@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Intermediate Web Dev Demo</title>
+
+  <!-- ----------  CSS  ---------- -->
+  <style>
+    /* =======  design tokens  ======= */
+    :root {
+      --teal:   #008080;
+      --teal-2: #005f60;
+      --light:  #f8ffff;
+      --accent: #fdbb2d;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--light);
+      color:#333;
+      line-height:1.6;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* =======  Header & Nav (Flexbox)  ======= */
+    header {
+      background: var(--teal);
+      color:#fff;
+      padding:1rem 2rem;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:.75rem;
+    }
+    header h1 { font-size:1.6rem; }
+    nav ul {
+      list-style:none;
+      display:flex;
+      gap:1rem;
+    }
+    nav a {
+      color:#fff; 
+      text-decoration:none;
+      font-weight:600;
+    }
+    nav a:hover { text-decoration:underline; }
+
+    /* =======  Main layout (CSS Grid)  ======= */
+    main {
+      flex:1;                       /* push footer to the bottom */
+      display:grid;
+      grid-template-columns:250px 1fr;
+      gap:2rem;
+      max-width:1200px;
+      margin:2rem auto;
+      padding:0 1.25rem;
+    }
+    aside {
+      background:#fff;
+      padding:1.25rem;
+      border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+    }
+    section {
+      background:#fff;
+      padding:1.5rem;
+      border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+    }
+    h2 { margin-bottom:.75rem; color:var(--teal-2); }
+
+    /* =======  Contact Form  ======= */
+    form .field {
+      margin-bottom:1rem;
+    }
+    label { display:block; font-weight:600; margin-bottom:.25rem; }
+    input, textarea {
+      width:100%; padding:.6rem .75rem;
+      border:2px solid #ccc;
+      border-radius:6px;
+      font-size:1rem;
+    }
+    input:focus, textarea:focus { outline:none; border-color:var(--teal); }
+    .error { color:#e20; font-size:.875rem; margin-top:.25rem; }
+    button.btn {
+      background:var(--accent);
+      border:none;
+      padding:.7rem 1.4rem;
+      border-radius:6px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .18s;
+    }
+    button.btn:hover { transform:translateY(-2px); }
+
+    /* =======  To-Do List  ======= */
+    #todo-form { margin-top:1rem; display:flex; gap:.5rem; }
+    #todo-input { flex:1; }
+    #todo-list {
+      list-style:none; margin-top:1rem;
+    }
+    #todo-list li {
+      padding:.5rem .75rem;
+      background:#f0fafa;
+      border:1px solid #d8f0f0;
+      border-radius:5px;
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:.5rem;
+    }
+    #todo-list li button {
+      background:none; border:none; font-size:.9rem; cursor:pointer;
+      color:var(--teal-2);
+    }
+    #todo-list li button:hover { text-decoration:underline; }
+
+    /* =======  Responsiveness  ======= */
+    @media (max-width: 768px) {
+      main { 
+        grid-template-columns:1fr; 
+      }
+      aside { order:2; } /* put aside below main content on small screens */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ----------  HEADER / NAV  ---------- -->
+  <header>
+    <h1>ApexPlanet Demo Site</h1>
+    <nav>
+      <ul>
+        <li><a href="#contact">Contact Form</a></li>
+        <li><a href="#todo">To-Do List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ----------  MAIN GRID  ---------- -->
+  <main>
+    <!-- sidebar -->
+    <aside>
+      <h2>Quick Links</h2>
+      <ul style="list-style:disc inside; padding-left:.5rem;">
+        <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Forms" target="_blank">HTML Forms Guide</a></li>
+        <li><a href="https://flexboxfroggy.com" target="_blank">Flexbox Froggy 🐸</a></li>
+        <li><a href="https://cssgridgarden.com" target="_blank">Grid Garden 🥕</a></li>
+      </ul>
+    </aside>
+
+    <!-- main content -->
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>Fields marked <em>*</em> are required.</p>
+
+      <form id="contact-form" novalidate>
+        <div class="field">
+          <label for="name">Name *</label>
+          <input id="name" name="name" type="text" required />
+          <div class="error" data-for="name"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email *</label>
+          <input id="email" name="email" type="email" required />
+          <div class="error" data-for="email"></div>
+        </div>
+
+        <div class="field">
+          <label for="msg">Message</label>
+          <textarea id="msg" name="msg" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Send Message</button>
+        <p id="success" style="color:green; margin-top:1rem; display:none;">
+          ✅ Thanks! We’ll get back to you soon.
+        </p>
+      </form>
+    </section>
+
+    <!-- 2nd column of grid remains empty (because only one section); keeps layout simple -->
+  </main>
+
+  <!-- TODO list lives in full-width section after main grid -->
+  <section id="todo" style="max-width:800px; margin:0 auto 2.5rem;">
+    <h2>My To-Do List</h2>
+
+    <form id="todo-form">
+      <input id="todo-input" type="text" placeholder="New task…" required />
+      <button type="submit" class="btn">Add</button>
+    </form>
+
+    <ul id="todo-list"></ul>
+  </section>
+
+  <footer style="background:#eee; text-align:center; padding:1rem;">
+    © <span id="year"></span> ApexPlanet • Demo site for intermediate web dev skills
+  </footer>
+
+  <!-- ----------  JAVASCRIPT  ---------- -->
+  <script>
+    /* =======  Helper Functions  ======= */
+    const qs  = (sel, ctx=document) => ctx.querySelector(sel);
+    const qsa = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+
+    /* =======  Contact Form Validation  ======= */
+    const form   = qs('#contact-form');
+    const fields = ['name', 'email'];
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      let valid = true;
+
+      fields.forEach(id => {
+        const input = qs('#' + id);
+        const errorBox = qs('.error[data-for=' + id + ']');
+        errorBox.textContent = '';
+
+        if (!input.value.trim()) {
+          errorBox.textContent = 'This field is required.';
+          valid = false;
+        } else if (id === 'email' && !/^[\w-.]+@([\w-]+\.)+\w{2,}$/.test(input.value)) {
+          errorBox.textContent = 'Please enter a valid email.';
+          valid = false;
+        }
+      });
+
+      if (valid) {
+        qs('#success').style.display = 'block';
+        form.reset();
+      } else {
+        qs('#success').style.display = 'none';
+      }
+    });
+
+    /* =======  Dynamic To-Do List  ======= */
+    const todoForm  = qs('#todo-form');
+    const todoInput = qs('#todo-input');
+    const todoList  = qs('#todo-list');
+
+    todoForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if (!text) return;
+
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${text}</span>
+                      <button aria-label="Remove">✖</button>`;
+      todoList.appendChild(li);
+      todoInput.value = '';
+    });
+
+    todoList.addEventListener('click', e => {
+      if (e.target.tagName === 'BUTTON') {
+        e.target.parentElement.remove();
+      }
+    });
+
+    /* =======  Misc  ======= */
+    qs('#year').textContent
