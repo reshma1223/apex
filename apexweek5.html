@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini E-Commerce</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: #eee;
+      padding: 1rem;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #222;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    #filters {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    #filters input, #filters select {
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 48%;
+    }
+    #product-list {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .product {
+      background: #2e2e2e;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .product img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product h3 {
+      margin: 0.5rem 0;
+    }
+    .product p {
+      color: #4db8ff;
+      font-weight: bold;
+    }
+    .product button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #28a745;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .product button:hover {
+      background: #218838;
+    }
+    #cart {
+      background: #ff6b6b;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      font-weight: bold;
+    }
+    section#about, section#quiz {
+      background: #333;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 2rem;
+    }
+    section#about h2, section#quiz h2 {
+      margin-bottom: 1rem;
+      color: #f1c40f;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛍 Trendy Cart</h1>
+    <div id="cart">
+      🛒 Cart <span id="cart-count">0</span>
+    </div>
+  </header>
+
+  <section id="filters">
+    <input type="text" id="search" placeholder="🔎 Search products..." />
+    <select id="sort">
+      <option value="default">Sort By</option>
+      <option value="low-high">Price: Low to High</option>
+      <option value="high-low">Price: High to Low</option>
+    </select>
+  </section>
+
+  <main id="product-list">
+    <!-- Products will appear here -->
+  </main>
+
+  <section id="quiz">
+    <h2>🧠 Quick Quiz</h2>
+    <ul>
+      <li>1. What is JavaScript used for in web development?</li>
+      <li>2. Name two CSS properties that affect layout.</li>
+      <li>3. What is the purpose of a "div" element?</li>
+    </ul>
+  </section>
+
+  <section id="about">
+    <h2>👤 About Me</h2>
+    <p>Hi! I'm a passionate web developer who loves creating beautiful and functional UIs. I enjoy working with JavaScript, CSS, and building mini projects like this e-commerce site to improve my skills. Let's build something awesome together!</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Trendy Cart. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const productList = document.getElementById("product-list");
+    const searchInput = document.getElementById("search");
+    const sortSelect = document.getElementById("sort");
+    const cartCount = document.getElementById("cart-count");
+
+    let cart = [];
+
+    const products = [
+      {
+        "id": 1,
+        "name": "Wireless Headphones",
+        "price": 59.99,
+        "image": "https://m.media-amazon.com/images/I/61PZlB1x-LL._AC_SX679_.jpg"
+      },
+      {
+        "id": 2,
+        "name": "Laptop Stand",
+        "price": 29.99,
+        "image": "https://m.media-amazon.com/images/I/61R9SGD3NjL._AC_SX679_.jpg"
+      },
+      {
+        "id": 3,
+        "name": "LED Desk Lamp",
+        "price": 19.99,
+        "image": "https://m.media-amazon.com/images/I/61ch0eU6fvL._AC_SX679_.jpg"
+      }
+    ];
+
+    function displayProducts(items) {
+      productList.innerHTML = "";
+      items.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product";
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+          <h3>${p.name}</h3>
+          <p>$${p.price}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
+        `;
+        productList.appendChild(card);
+      });
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      cartCount.textContent = cart.length;
+      alert(`${product.name} added to cart!`);
+    }
+
+    searchInput.addEventListener("input", () => {
+      const keyword = searchInput.value.toLowerCase();
+      const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(keyword)
+      );
+      displayProducts(filtered);
+    });
+
+    sortSelect.addEventListener("change", () => {
+      let sorted = [...products];
+      if (sortSelect.value === "low-high") {
+        sorted.sort((a, b) => a.price - b.price);
+      } else if (sortSelect.value === "high-low") {
+        sorted.sort((a, b) => b.price - a.price);
+      }
+      displayProducts(sorted);
+    });
+
+    // Initial display
+    displayProducts(products);
+  </script>
+</body>
+</html>
