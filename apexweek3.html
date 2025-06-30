@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Styling & JavaScript Demo</title>
+
+  <!-- =========  CSS  ========= -->
+  <style>
+    /* --- design tokens --- */
+    :root {
+      --primary: #006c6d;
+      --accent:  #f8b400;
+      --light:   #f1ffff;
+      --dark:    #024242;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--light);
+      color:#333;
+      line-height:1.6;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    header {
+      background: var(--primary);
+      color:#fff;
+      padding:1rem 2rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:1rem;
+    }
+    header h1 { font-size:1.5rem; }
+
+    nav ul {
+      list-style:none;
+      display:flex;
+      gap:1rem;
+    }
+    nav a { color:#fff; text-decoration:none; font-weight:600; }
+    nav a:hover { text-decoration:underline; }
+
+    main {
+      max-width:1100px;
+      margin:2rem auto;
+      padding:0 1rem;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:2rem;
+    }
+
+    section {
+      background:#fff;
+      padding:1.5rem;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+    h2 { margin-bottom:1rem; color:var(--dark); }
+
+    /* --- image carousel --- */
+    .carousel {
+      position:relative;
+      overflow:hidden;
+      border-radius:8px;
+    }
+    .carousel-track {
+      display:flex;
+      transition:transform .5s ease;
+    }
+    .carousel img {
+      width:100%;
+      flex:0 0 100%;
+      object-fit:cover;
+      max-height:340px;
+    }
+    .carousel button {
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(0,0,0,.4);
+      border:none; color:#fff; font-size:2rem; line-height:1;
+      padding:.2rem .7rem; cursor:pointer;
+    }
+    .carousel button:hover { background:rgba(0,0,0,.6); }
+    .prev { left:8px; } .next { right:8px; }
+
+    /* --- joke box --- */
+    #joke-box {
+      padding:1rem;
+      background:#f9fefd;
+      border:2px dashed var(--primary);
+      border-radius:8px;
+      min-height:80px;
+    }
+    .btn {
+      display:inline-block; margin-top:1rem;
+      padding:.6rem 1.2rem;
+      background:var(--accent);
+      border:none; border-radius:6px;
+      font-weight:700; cursor:pointer;
+      transition:transform .18s;
+    }
+    .btn:hover { transform:scale(1.05); }
+
+    /* =========  MEDIA QUERIES  ========= */
+    @media (min-width: 700px) {
+      main { grid-template-columns: repeat(2, 1fr); }
+      header h1 { font-size:1.8rem; }
+    }
+    @media (min-width: 950px) {
+      main { grid-template-columns: repeat(3, 1fr); }
+      nav ul { gap:2rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- =========  HEADER  ========= -->
+  <header>
+    <h1>Task 3 • Advanced Web Demo</h1>
+    <nav>
+      <ul>
+        <li><a href="#carousel">Carousel</a></li>
+        <li><a href="#api">API Demo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========  MAIN  ========= -->
+  <main>
+    <!-- ----------  CAROUSEL  ---------- -->
+    <section id="carousel">
+      <h2>Responsive Image Carousel</h2>
+      <div class="carousel">
+        <div class="carousel-track" id="track">
+          <!-- any royalty-free pics from Unsplash -->
+          <img src="https://source.unsplash.com/featured/800x340?nature" alt="slide 1">
+          <img src="https://source.unsplash.com/featured/800x340?city" alt="slide 2">
+          <img src="https://source.unsplash.com/featured/800x340?technology" alt="slide 3">
+        </div>
+        <button class="prev" aria-label="Previous slide">‹</button>
+        <button class="next" aria-label="Next slide">›</button>
+      </div>
+    </section>
+
+    <!-- ----------  JOKE API  ---------- -->
+    <section id="api">
+      <h2>Instant Joke (API Fetch)</h2>
+      <div id="joke-box">Click “Get Joke” to load a random joke from official-joke-api.</div>
+      <button class="btn" id="joke-btn">Get Joke</button>
+    </section>
+
+    <!-- ----------  EXTRA SPACE (auto-flow grid) ---------- -->
+    <section>
+      <h2>Playground</h2>
+      <p>Add your own advanced JS widgets or CSS experiments here.</p>
+    </section>
+  </main>
+
+  <footer style="margin-top:auto; background:#eee; text-align:center; padding:1rem;">
+    © <span id="year"></span> ApexPlanet • Advanced demo
+  </footer>
+
+  <!-- =========  JAVASCRIPT  ========= -->
+  <script>
+    /* ==========  Carousel  ========== */
+    const track   = document.getElementById('track');
+    const slides  = [...track.children];
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let index = 0;
+
+    function updateSlide() {
+      track.style.transform = translateX(-${index * 100}%);
+    }
+    prevBtn.addEventListener('click', () => {
+      index = (index - 1 + slides.length) % slides.length;
+      updateSlide();
+    });
+    nextBtn.addEventListener('click', () => {
+      index = (index + 1) % slides.length;
+      updateSlide();
+    });
+
+    /* swipe support */
+    let startX = 0;
+    track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    track.addEventListener('touchend',   e => {
+      const diff = e.changedTouches[0].clientX - startX;
+      if (Math.abs(diff) > 50) diff > 0 ? prevBtn.click() : nextBtn.click();
+    });
+
+    /* ==========  Joke API  ========== */
+    const jokeBtn  = document.getElementById('joke-btn');
+    const jokeBox  = document.getElementById('joke-box');
+
+    async function loadJoke() {
+      jokeBox.textContent = 'Loading…';
+      try {
+        const res   = await fetch('https://official-joke-api.appspot.com/random_joke');
+        const joke  = await res.json();
+        jokeBox.textContent = ${joke.setup} — ${joke.punchline};
+      } catch(err) {
+        jokeBox.textContent = 'Sorry, failed to fetch joke 😢';
+      }
+    }
+    jokeBtn.addEventListener('click', loadJoke);
+
+    /* footer year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
