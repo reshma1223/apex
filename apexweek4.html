@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Full Project – ApexPlanet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f7fafa; color: #333; line-height: 1.6; }
+
+    header, nav, main, footer {
+      max-width: 960px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    header { background: teal; color: white; text-align: center; padding: 2rem 1rem; }
+    nav a {
+      margin: 0 1rem;
+      color: teal;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    section { background: white; margin: 2rem 0; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+    h2 { color: teal; margin-bottom: 1rem; }
+
+    /* --- TO-DO APP --- */
+    #todo-list li {
+      background: #e6f7f7;
+      margin: .5rem 0;
+      padding: .5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* --- PRODUCT LIST --- */
+    .product {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .controls select {
+      padding: .5rem;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ApexPlanet Full Project</h1>
+    <p>HTML + CSS + JavaScript (Local Storage, Filtering, Sorting)</p>
+  </header>
+
+  <nav>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#todo">To-Do App</a>
+    <a href="#products">Products</a>
+  </nav>
+
+  <main>
+    <!-- 1. Portfolio Section -->
+    <section id="portfolio">
+      <h2>My Portfolio</h2>
+      <p>Welcome to my personal portfolio. Here's an overview of what I do:</p>
+      <ul>
+        <li><strong>About Me:</strong> Passionate web developer learning modern tools.</li>
+        <li><strong>Projects:</strong> Built quiz apps, to-do lists, portfolio pages, and more.</li>
+        <li><strong>Contact:</strong> Email me at <a href="#">you@example.com</a></li>
+      </ul>
+    </section>
+
+    <!-- 2. To-Do List with localStorage -->
+    <section id="todo">
+      <h2>To-Do List (with Local Storage)</h2>
+      <form id="todo-form">
+        <input type="text" id="todo-input" placeholder="Add task..." required />
+        <button type="submit">Add</button>
+      </form>
+      <ul id="todo-list"></ul>
+    </section>
+
+    <!-- 3. Product Listing Page with Filters -->
+    <section id="products">
+      <h2>Products</h2>
+      <div class="controls">
+        <label>Filter:
+          <select id="filter">
+            <option value="all">All</option>
+            <option value="Books">Books</option>
+            <option value="Electronics">Electronics</option>
+          </select>
+        </label>
+
+        <label>Sort:
+          <select id="sort">
+            <option value="name">By Name</option>
+            <option value="price">By Price</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="product-list"></div>
+    </section>
+  </main>
+
+  <footer style="text-align:center; background:#eee; padding:1rem;">
+    &copy; <span id="year"></span> ApexPlanet Project Demo
+  </footer>
+
+  <!-- ========== JavaScript ========== -->
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // === To-Do with Local Storage ===
+    const todoInput = document.getElementById("todo-input");
+    const todoForm = document.getElementById("todo-form");
+    const todoList = document.getElementById("todo-list");
+
+    let todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    function renderTodos() {
+      todoList.innerHTML = "";
+      todos.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = ${item} <button onclick="deleteTodo(${i})">✖</button>;
+        todoList.appendChild(li);
+      });
+    }
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      renderTodos();
+    }
+
+    todoForm.addEventListener("submit", e => {
+      e.preventDefault();
+      todos.push(todoInput.value);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      todoInput.value = "";
+      renderTodos();
+    });
+    renderTodos();
+
+    // === Product Listing + Filtering/Sorting ===
+    const products = [
+      { name: "JavaScript Book", category: "Books", price: 499 },
+      { name: "Bluetooth Speaker", category: "Electronics", price: 1199 },
+      { name: "Notebook", category: "Books", price: 199 },
+      { name: "LED Monitor", category: "Electronics", price: 4999 },
+    ];
+
+    const productList = document.getElementById("product-list");
+    const filter = document.getElementById("filter");
+    const sort = document.getElementById("sort");
+
+    function displayProducts() {
+      const cat = filter.value;
+      const sortBy = sort.value;
+
+      let filtered = [...products];
+      if (cat !== "all") {
+        filtered = filtered.filter(p => p.category === cat);
+      }
+
+      filtered.sort((a, b) => {
+        if (sortBy === "name") return a.name.localeCompare(b.name);
+        if (sortBy === "price") return a.price - b.price;
+      });
+
+      productList.innerHTML = "";
+      filtered.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = <strong>${p.name}</strong><br>Category: ${p.category}<br>Price: ₹${p.price};
+        productList.appendChild(div);
+      });
+    }
+
+    filter.addEventListener("change", displayProducts);
+    sort.addEventListener("change", displayProducts);
+    displayProducts();
+  </script>
+</body>
+</html>
